@@ -16,17 +16,51 @@ export const possibleTileContents = [
   icons.GiOpenBook,
 ];
 
-export function StartScreen({ start }) {
+export function StartScreen({ start, theme, handleSwitchTheme }) {
+  console.log(theme, handleSwitchTheme);
   return (
-    <div>
-      <button onClick={start} className="bg-gray-400 text-white p-3">
-        Play
-      </button>
+    <div className="bg-white dark:bg-black w-full min-h-screen py-8 flex flex-col justify-center items-center">
+      <Switcher
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        theme={theme}
+        handleSwitchTheme={handleSwitchTheme}
+      />
+
+      <div
+        className="flex flex-col justify-center items-center w-[calc(100%_-_16px)] max-w-sm mx-auto space-y-8 pt-24 px-4 pb-32 bg-pink-500/10 rounded-lg"
+        data-aos="zoom-in"
+      >
+        <h1
+          className="font-bold text-pink-500 text-4xl"
+          data-aos="fade-up"
+          data-aos-delay={200}
+        >
+          Memory
+        </h1>
+        <p
+          className="text-pink-500 font-medium text-center"
+          data-aos="fade-up"
+          data-aos-delay={400}
+        >
+          Flip over tiles looking for pairs
+        </p>
+        <button
+          onClick={start}
+          className="bg-gradient bg-gradient-to-b hover:bg-gradient-to-t transition duration-200 from-pink-400 via-pink-500 via-50% to-pink-600 to-100% text-white px-12 py-2 rounded-full mx-auto shadow-lg text-lg"
+          data-aos="fade-up"
+          data-aos-delay={600}
+        >
+          Play
+        </button>
+      </div>
     </div>
   );
 }
 
-export function PlayScreen({ end }) {
+export function PlayScreen({ end, theme, handleSwitchTheme }) {
   const [tiles, setTiles] = useState(null);
   const [tryCount, setTryCount] = useState(0);
 
@@ -109,12 +143,48 @@ export function PlayScreen({ end }) {
 
   return (
     <>
-      <div>
-        {getTiles(6).map((tile, i) => (
-          <Tile key={i} flip={() => flip(i)} {...tile} />
-        ))}
+      <div className="flex flex-col justify-center items-center w-full px-4 mx-auto min-h-screen bg-white dark:bg-black">
+        <Switcher theme={theme} handleSwitchTheme={handleSwitchTheme} />
+
+        <div className="w-full mx-auto flex flex-col justify-center items-center space-y-8">
+          <h1
+            className="font-medium text-indigo-500 text-center"
+            data-aos="fade-up"
+          >
+            Tries{" "}
+            <span className="bg-indigo-300 px-2 rounded ml-1">{tryCount}</span>
+          </h1>
+          <div
+            className="grid grid-cols-4 gap-2.5 sm:gap-4 p-2.5 sm:p-4 rounded-lg bg-indigo-300/20"
+            data-aos="zoom-in"
+          >
+            {getTiles(16).map((tile, i) => (
+              <Tile key={i} flip={() => flip(i)} {...tile} />
+            ))}
+          </div>
+        </div>
       </div>
-      {tryCount}
     </>
   );
 }
+export const Switcher = ({ theme, handleSwitchTheme }) => {
+  return (
+    <div
+      className="flex justify-end w-[calc(100%_-_16px)] max-w-sm mx-auto mb-8"
+      data-aos="fade-left"
+    >
+      <div className="flex items-center w-12 h-6 bg-black dark:bg-white rounded-full border shadow transition duration-200">
+        <span
+          className={`flex justify-center items-center bg-white dark:bg-black h-5 w-5 mx-0.5 rounded-full text-sm cursor-pointer transition duration-200 ${
+            theme === "dark" ? "translate-x-full" : "translate-x-0"
+          }`}
+          onClick={() => {
+            handleSwitchTheme();
+          }}
+        >
+          {theme === "light" ? "🌙" : "☀️"}
+        </span>
+      </div>
+    </div>
+  );
+};

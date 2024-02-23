@@ -1,36 +1,61 @@
+import ReactCardFlip from "react-card-flip";
+
 export function Tile({ content: Content, flip, state }) {
   switch (state) {
     case "start":
       return (
-        <Back
-          className="inline-block h-8 w-8 bg-blue-300 text-center"
-          flip={flip}
-        />
+        <ReactCardFlip
+          flipDirection="horizontal"
+          isFlipped={state === "flipped" ? true : false}
+        >
+          <Back
+            className={`flex justify-center h-14 sm:h-20 w-14 sm:w-20 bg-indigo-400 text-center rounded-lg ${
+              state === "start"
+                ? "[transform:rotateY(180deg)]"
+                : "[transform:rotateY(0deg)]"
+            }`}
+            flip={flip}
+          />
+          <Front
+            className={`flex justify-center items-center h-14 sm:h-20 w-14 sm:w-20 bg-indigo-500 rounded-lg ${
+              state === "flipped"
+                ? "[transform:rotateY(0deg)]"
+                : "[transform:rotateY(180deg)]"
+            }`}
+          >
+            <Content className="bg-indigo-500 text-white h-12 sm:h-16 w-12 sm:w-16 rounded-lg [transform:rotateY(180deg)]" />
+          </Front>
+        </ReactCardFlip>
       );
     case "flipped":
       return (
-        <Front className="inline-block h-8 w-8 bg-green-500">
-          <Content
-            style={{
-              display: "inline-block",
-              width: "100%",
-              height: "100%",
-              verticalAlign: "top",
-            }}
+        <ReactCardFlip
+          flipDirection="horizontal"
+          isFlipped={state === "flipped" ? true : false}
+        >
+          <Front
+            className={`flex justify-center items-center h-14 sm:h-20 w-14 sm:w-20 bg-indigo-500 rounded-lg ${
+              state === "flipped"
+                ? "[transform:rotateY(0deg)]"
+                : "[transform:rotateY(180deg)]"
+            }`}
+          >
+            <Content className="bg-indigo-500 text-white h-12 sm:h-16 w-12 sm:w-16 rounded-lg [transform:rotateY(180deg)]" />
+          </Front>
+          <Back
+            className={`flex h-14 sm:h-20 w-14 sm:w-20 bg-indigo-400 text-center rounded-lg ${
+              state === "start"
+                ? "[transform:rotateY(180deg)]"
+                : "[transform:rotateY(0deg)]"
+            }`}
+            flip={flip}
           />
-        </Front>
+        </ReactCardFlip>
       );
     case "matched":
       return (
-        <Matched className="inline-block h-8 w-8 text-gray-300">
-          <Content
-            style={{
-              display: "inline-block",
-              width: "100%",
-              height: "100%",
-              verticalAlign: "top",
-            }}
-          />
+        <Matched className="flex justify-center items-center h-14 sm:h-20 w-14 sm:w-20 text-indigo-300">
+          <Content className="h-12 sm:h-16 w-12 sm:w-16 text-indigo-200" />
         </Matched>
       );
     default:
@@ -39,11 +64,7 @@ export function Tile({ content: Content, flip, state }) {
 }
 
 function Back({ className, flip }) {
-  return (
-    <div onClick={flip} className={className}>
-      ?
-    </div>
-  );
+  return <div onClick={flip} className={className}></div>;
 }
 
 function Front({ className, children }) {
